@@ -1,5 +1,4 @@
 """
-Phase 4 — Run Three Different Workloads
 =======================================
 Controlled comparison of three distinct computational workloads:
 - Experiment A: Pure CPU loop (arithmetic squaring)

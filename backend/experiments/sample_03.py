@@ -1,5 +1,4 @@
 """
-Phase 5 — First Real ML Model Comparison
 =========================================
 Controlled comparison of 4 classical machine learning models on the Breast Cancer dataset:
 1. Logistic Regression

@@ -1,5 +1,4 @@
 """
-Phase 7 — Structured Measurement Storage & CSV Collection
 ==========================================================
 Executes controlled model benchmarks, captures full system and CodeCarbon energy metrics,
 and persists them into structured CSV files ready for database persistence (Phase 8 SQLite / FastAPI).
