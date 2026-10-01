@@ -6,6 +6,8 @@ Run any experiment sample from the root directory with ease:
   python run_experiments.py --all
   python run_experiments.py --sample 1
   python run_experiments.py --sample image
+  python run_experiments.py --plot
+  python run_experiments.py --plot-intervals
   python run_experiments.py --detect
 """
 
@@ -70,19 +72,32 @@ def run_sample(sample_id):
     return res.returncode == 0
 
 
+def run_comparison_plot():
+    plot_script = os.path.join(EXPERIMENTS_DIR, "plot_experiments_comparison.py")
+    print("\n[+] Generating overall experiments comparison chart...")
+    res = subprocess.run([sys.executable, plot_script], cwd=EXPERIMENTS_DIR)
+    return res.returncode == 0
+
+
+def run_interval_plots():
+    plot_script = os.path.join(EXPERIMENTS_DIR, "plot_multi_run_intervals.py")
+    print("\n[+] Generating multi-run interval charts across all samples...")
+    res = subprocess.run([sys.executable, plot_script], cwd=EXPERIMENTS_DIR)
+    return res.returncode == 0
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="GreenGauge Experiment Benchmark Runner",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python run_experiments.py --detect        # Detect system hardware
-  python run_experiments.py --sample 1      # Run sample_01.py
-  python run_experiments.py --sample image  # Run exp_image.py
-  python run_experiments.py --sample audio  # Run exp_audio.py
-  python run_experiments.py --sample video  # Run exp_video.py
-  python run_experiments.py --sample csv    # Run exp_csv.py
-  python run_experiments.py --all           # Run all experiments in sequence
+  python run_experiments.py --detect           # Detect system hardware
+  python run_experiments.py --sample 1         # Run sample_01.py
+  python run_experiments.py --sample image     # Run exp_image.py
+  python run_experiments.py --plot             # Generate overall comparison chart
+  python run_experiments.py --plot-intervals   # Generate multi-run interval plots
+  python run_experiments.py --all              # Run all experiments in sequence
         """
     )
     parser.add_argument(
@@ -91,12 +106,22 @@ Examples:
         help="Sample number (1-9) or modality name (image, audio, video, csv)"
     )
     parser.add_argument("--all", action="store_true", help="Run all experiment samples sequentially")
+    parser.add_argument("--plot", action="store_true", help="Generate Matplotlib comparison chart of all experiments")
+    parser.add_argument("--plot-intervals", action="store_true", help="Generate Matplotlib multi-run interval plots for all samples")
     parser.add_argument("--detect", action="store_true", help="Detect hardware used for carbon estimation")
 
     args = parser.parse_args()
 
     if args.detect:
         run_hardware_detection()
+        return
+
+    if args.plot:
+        run_comparison_plot()
+        return
+
+    if args.plot_intervals:
+        run_interval_plots()
         return
 
     if args.all:
@@ -138,13 +163,16 @@ Examples:
     for s_id in range(6, 10):
         _, desc = SAMPLES[s_id]
         print(f"  [{s_id}] Sample 0{s_id} -- {desc}")
+    print("  --- Visualization & Plotting ---")
+    print("  [P] Overall Experiments Comparison Chart (matplotlib)")
+    print("  [M] Multi-Run Interval Comparison Plots (matplotlib)")
     print("  --------------------------------")
     print("  [A] Run All Experiments (01 to 09)")
     print("  [Q] Quit")
     print("=" * 70)
 
     try:
-        choice = input("Select an option (0-9, A, Q): ").strip().upper()
+        choice = input("Select an option: ").strip().upper()
     except (KeyboardInterrupt, EOFError):
         print("\nExiting.")
         return
@@ -153,6 +181,10 @@ Examples:
         run_hardware_detection()
     elif choice in [str(i) for i in range(1, 10)]:
         run_sample(int(choice))
+    elif choice == "P":
+        run_comparison_plot()
+    elif choice == "M":
+        run_interval_plots()
     elif choice == "A":
         for s_id in sorted(SAMPLES.keys()):
             run_sample(s_id)

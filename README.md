@@ -270,6 +270,32 @@ python exp_csv.py
 
 ---
 
+## 📈 Visualizing Energy & Carbon Emissions (Matplotlib)
+
+GreenGauge provides automated Matplotlib data visualization modules to generate high-resolution comparison charts and multi-run interval analytics:
+
+### 1. Overall Experiments Comparison Chart
+Generates a publication-grade side-by-side comparison of **Energy Consumed (mWh)** and **Carbon Emissions (mg $CO_2e$)** across all 11 project workloads (Baseline compute, classical ML models, and multi-modal media):
+```bash
+python run_experiments.py --plot
+# Or directly:
+python backend/experiments/plot_experiments_comparison.py
+```
+- **Saved Output**: `results/experiments_comparison.png`
+
+### 2. Multi-Run Interval Comparison Plots
+Executes multiple trials per sample separated by a cooldown interval to evaluate measurement repeatability, variance, and temporal stability:
+```bash
+python run_experiments.py --plot-intervals
+# Or directly:
+python backend/experiments/plot_multi_run_intervals.py
+```
+- **Master Multi-Panel Plot**: `results/multi_run_intervals_comparison.png` (3x2 grid with separate dual-axis subplots for each sample)
+- **Individual Sample Charts**: `results/intervals/` (`interval_image.png`, `interval_audio.png`, `interval_video.png`, `interval_csv.png`, `interval_random_forest.png`, `interval_svm.png`)
+- **Raw Multi-Run Dataset**: `results/multi_run_interval_data.csv`
+
+---
+
 ## 🛠️ Troubleshooting & FAQs
 
 ### 1. `ModuleNotFoundError: No module named 'codecarbon'` or `'PIL'`
