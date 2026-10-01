@@ -1,5 +1,5 @@
 id,name,dataset,model,accuracy,runtime_s,energy_kwh,emissions_kg,cpu_power_w,gpu_power_w,ram_power_w,cpu_utilization,tracking_mode,cpu_model,created_at
-1,Logistic Regression Iris,iris,LogisticRegression,100.0,0.0131,3e-08,2.34e-08,22.128,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-20T10:12:36.705579
-2,Decision Tree Iris,iris,DecisionTreeClassifier,100.0,0.0009,1e-08,4.8e-09,4.01,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-20T10:12:41.243091
-3,Random Forest Breast Cancer,breast_cancer,RandomForestClassifier,96.49,0.1151,1.13e-06,8.064e-07,21.244,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-20T10:12:45.878001
-4,SVM Breast Cancer,breast_cancer,SVC,98.25,0.0048,2e-08,1.74e-08,13.122,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-20T10:12:50.472636
+1,Logistic Regression Iris,iris,LogisticRegression,100.0,0.0046,4e-08,2.88e-08,32.121,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-25T20:27:08.722572
+2,Decision Tree Iris,iris,DecisionTreeClassifier,100.0,0.0015,1e-08,7.5e-09,8.651,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-25T20:27:13.233821
+3,Random Forest Breast Cancer,breast_cancer,RandomForestClassifier,95.61,0.1064,7.9e-07,5.623e-07,9.442,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-25T20:27:17.852058
+4,SVM Breast Cancer,breast_cancer,SVC,98.25,0.0024,4e-08,2.53e-08,29.897,0.0,10.0,0.0,process,12th Gen Intel(R) Core(TM) i5-1235U,2026-09-25T20:27:22.396284

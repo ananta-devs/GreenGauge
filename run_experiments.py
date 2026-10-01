@@ -5,6 +5,7 @@ GreenGauge / Green AI Tracker - Unified Experiment Runner
 Run any experiment sample from the root directory with ease:
   python run_experiments.py --all
   python run_experiments.py --sample 1
+  python run_experiments.py --sample image
   python run_experiments.py --detect
 """
 
@@ -22,6 +23,21 @@ SAMPLES = {
     3: ("sample_03.py", "Phase 5: 4-Model Comparison (Logistic, Tree, Forest, SVM)"),
     4: ("sample_04.py", "Phase 6: Repeated Experiments (5 Runs, Mean ± Std)"),
     5: ("sample_05.py", "Phase 7: Structured CSV Collection & Persistence"),
+    6: ("exp_image.py", "Image Modality: Spatial Filtering & Computer Vision"),
+    7: ("exp_audio.py", "Audio Modality: FFT Spectrum & Digital Signal Processing"),
+    8: ("exp_video.py", "Video Modality: Motion Differencing & Frame Analytics"),
+    9: ("exp_csv.py",   "Tabular Modality: Feature Engineering & Tabular Modeling"),
+}
+
+ALIAS_MAP = {
+    "image": 6,
+    "img": 6,
+    "audio": 7,
+    "sound": 7,
+    "video": 8,
+    "vid": 8,
+    "csv": 9,
+    "tabular": 9,
 }
 
 
@@ -35,7 +51,7 @@ def run_hardware_detection():
 
 def run_sample(sample_id):
     if sample_id not in SAMPLES:
-        print(f"[!] Error: Invalid sample {sample_id}. Choose between 1 and 5.")
+        print(f"[!] Error: Invalid sample '{sample_id}'. Choose between 1 and 9 or [image, audio, video, csv].")
         return False
 
     script_name, description = SAMPLES[sample_id]
@@ -62,11 +78,18 @@ def main():
 Examples:
   python run_experiments.py --detect        # Detect system hardware
   python run_experiments.py --sample 1      # Run sample_01.py
-  python run_experiments.py --sample 5      # Run Phase 7 CSV benchmark
-  python run_experiments.py --all           # Run all 5 experiments in sequence
+  python run_experiments.py --sample image  # Run exp_image.py
+  python run_experiments.py --sample audio  # Run exp_audio.py
+  python run_experiments.py --sample video  # Run exp_video.py
+  python run_experiments.py --sample csv    # Run exp_csv.py
+  python run_experiments.py --all           # Run all experiments in sequence
         """
     )
-    parser.add_argument("--sample", type=int, choices=[1, 2, 3, 4, 5], help="Sample number to run (1-5)")
+    parser.add_argument(
+        "--sample",
+        type=str,
+        help="Sample number (1-9) or modality name (image, audio, video, csv)"
+    )
     parser.add_argument("--all", action="store_true", help="Run all experiment samples sequentially")
     parser.add_argument("--detect", action="store_true", help="Detect hardware used for carbon estimation")
 
@@ -77,41 +100,58 @@ Examples:
         return
 
     if args.all:
-        print("\nStarting full Green AI experiment pipeline (Samples 01 to 05)...")
+        print("\nStarting full Green AI experiment pipeline (Samples 01 to 09)...")
         for s_id in sorted(SAMPLES.keys()):
             success = run_sample(s_id)
             if not success:
                 print(f"[!] Sample {s_id} encountered an error. Stopping pipeline.")
                 sys.exit(1)
-        print("\n[✔] All experiment benchmarks completed successfully!")
+        print("\n[OK] All experiment benchmarks completed successfully!")
         return
 
     if args.sample:
-        success = run_sample(args.sample)
+        val = args.sample.lower()
+        if val in ALIAS_MAP:
+            target_id = ALIAS_MAP[val]
+        else:
+            try:
+                target_id = int(val)
+            except ValueError:
+                print(f"[!] Invalid sample '{args.sample}'. Use 1-9 or [image, audio, video, csv].")
+                sys.exit(1)
+
+        success = run_sample(target_id)
         if not success:
             sys.exit(1)
         return
 
     # If no argument supplied, show interactive menu
     print("\n" + "=" * 70)
-    print("  🌿 GreenGauge — Experiment Runner")
+    print("  * GreenGauge -- Experiment Runner")
     print("=" * 70)
     print("  [0] Detect Hardware (codecarbon detect)")
-    for s_id, (_, desc) in SAMPLES.items():
-        print(f"  [{s_id}] Sample 0{s_id} — {desc}")
-    print("  [A] Run All Experiments (01 to 05)")
+    print("  --- Core Baseline Benchmarks ---")
+    for s_id in range(1, 6):
+        _, desc = SAMPLES[s_id]
+        print(f"  [{s_id}] Sample 0{s_id} -- {desc}")
+    print("  --- Multi-Modal Media Benchmarks ---")
+    for s_id in range(6, 10):
+        _, desc = SAMPLES[s_id]
+        print(f"  [{s_id}] Sample 0{s_id} -- {desc}")
+    print("  --------------------------------")
+    print("  [A] Run All Experiments (01 to 09)")
     print("  [Q] Quit")
     print("=" * 70)
 
     try:
-        choice = input("Select an option (0-5, A, Q): ").strip().upper()
+        choice = input("Select an option (0-9, A, Q): ").strip().upper()
     except (KeyboardInterrupt, EOFError):
         print("\nExiting.")
         return
 
     if choice == "0":
         run_hardware_detection()
-    elif choice in ["1", "2", "3", "4", "5"]:
+    elif choice in [str(i) for i in range(1, 10)]:
         run_sample(int(choice))
     elif choice == "A":
         for s_id in sorted(SAMPLES.keys()):
